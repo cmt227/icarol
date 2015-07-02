@@ -1,0 +1,41 @@
+{
+    "manifest_version": 2,
+    "name": "iCarol Database Updater",
+    "version": "1.0",
+
+    "description": "Navigates the iCarol web application and enforces consistency of city and county data for programs",
+
+    "author": "Carsten Thue-Bludworth",
+
+    "page_action": {
+        "default_title": "iCarol Updater"
+    },
+
+    "background": {
+        "scripts": ["jquery-1.11.2.min.js", "underscore-min.js", "main.js"],
+        "persistent": false
+    },
+
+    "content_scripts": [
+      {
+          "matches": ["https://webapp.icarol.com/*"],
+          "js": ["jquery-1.11.2.min.js", "underscore-min.js", "helpers.js"]
+      },
+      {
+          "matches": ["https://webapp.icarol.com/secure/Resources/ResourceMain.aspx"],
+          "js": ["start.js"]
+      },
+      {
+          "matches": ["https://webapp.icarol.com/secure/Resources/ResourceMain.aspx?*"],
+          "js": ["loop.js"]
+      },
+      {
+          "matches": ["https://webapp.icarol.com/secure/Resources/ResourceView2.aspx?*"],
+          "js": ["edit.js"]
+      },
+      {
+          "matches": ["https://webapp.icarol.com/secure/Resources/ResourceEdit2.aspx?*"],
+          "js": ["update.js"]
+      }
+    ]
+}
