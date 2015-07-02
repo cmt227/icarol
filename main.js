@@ -28,6 +28,9 @@ function returnNextIndex( length ) {
     return index;
 }
 
+// Represents the number of pages worth of results for the search.
+var num_pages;
+
 // Represents the IDs of the open child tabs to edit a program page.
 // TODO: change logic to remove state.. maybe the same thing can
 // be accomplished with callbacks?
@@ -44,35 +47,36 @@ chrome.runtime.onConnect.addListener( function( port ) {
      * Hopefully chrome doesn't crash lol.
      */
     port.onMessage.addListener( function( msg ) {
-        switch (msg.name) {
-            case "create_tab":
-                console.log("Opening tab for url: " + msg.url);
-                chrome.tabs.create({
-                    url: msg.url
-                },
-                // callback function.
-                function( tab ) {
-                    open_child_tabs.push(tab.id); 
-                });
-                break;
-            case "get_new_page_index":
-                console.log("Waiting until child tabs close " +
-                    "before sending new page index...");
-                // Listens for closed tabs. When open_child_tabs is empty,
-                // send a new page index to loop.js
-                chrome.tabs.onRemoved.addListener( function( tabID, __ ) {
-                    open_child_tabs = _.without(open_child_tabs, tabID);
-                    if (open_child_tabs.length == 0)
-                        port.postMessage( returnNextIndex ( msg.length ) );
-                });
-                break;
+        if (msg.name == "create_tab") {
+            console.count("Opening tab");
+            chrome.tabs.create({
+                url: msg.url
+            },
+            // callback function.
+            function( tab ) {
+                open_child_tabs.push(tab.id); 
+            });
+            // refresh num_pages.
+            num_pages = msg.num_pages;
+        } else {
+            console.warn("Recieved an unknown message!");
+        }
+    });
+    // If closed tab was opened by the extention (i.e. it is in
+    // open_child_tabs), then remove it and conditionally send a message.
+    chrome.tabs.onRemoved.addListener( function( tabID, __ ) {
+        if ( _.contains( open_child_tabs, tabID ) ) {
+            open_child_tabs = _.without(open_child_tabs, tabID);
+            if ( open_child_tabs.length == 0 )
+                port.postMessage( returnNextIndex ( num_pages ) );
         }
     });
 });
 
+
 chrome.runtime.onMessage.addListener( function( message, sender, response ) {
     console.assert( message === "close_me",
         "Error recieving close request from tab id: " + sender.tab.id);
-    console.log("Closing tab with id: " + sender.tab.id);
+    console.count("Closing tab with id " + sender.tab.id);
     chrome.tabs.remove(sender.tab.id);
 });

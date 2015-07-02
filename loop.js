@@ -30,16 +30,10 @@ if ( program_links.length > 15 )
 for (var i = 0; i < program_links.length; i = i + 1) {
     port.postMessage({
         name: "create_tab",
-        url: program_links[i].href
+        url: program_links[i].href,
+        num_pages: result_pages.length
     });
 }
-
-// Request the next page index. Won't get a result until
-// all child tabs are closed.
-port.postMessage({
-    name: "get_new_page_index",
-    length: result_pages.length
-});
 
 // Runs when a new page of search results is to be loaded.
 port.onMessage.addListener(function( nextIndex ) {
