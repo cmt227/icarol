@@ -1,42 +1,36 @@
-console.log("Executing loop.js");
-
 /* Collects an object of DOM elements that link to the
  * pages of search results.
  */
-var result_pages = $("a[id^='cphBody_Page']", "#cphBody_tblPagingTop");
+var pages = $("a[id^='cphBody_Page']", "#cphBody_tblPagingTop");
+var page_links = _.map(pages, function(page) {
+    return page.href;
+});
 
 // Collects an object containing program links on the current page.
-var program_links = $("a:contains('Details')", "#cphBody_tblResults");
+var programs = $("a:contains('Details')", "#cphBody_tblResults");
+var program_links = _.map(programs, function(program) {
+    return program.href;
+});
 
-// Loads the results page referred to by results_pages[ index ].
-function loadResultsPage( index ) {
-    if (index == -1) {
-        console.log("I think we got 'em all, Bob!");
+// The current page has an href == ""
+var current_page = _.indexOf(page_links, "");
+
+chrome.runtime.sendMessage({
+    name: "program_links_list",
+    links: program_links
+});
+
+// If we're on the last page of results, tell the extension
+// that we're done and it will start processing the links.
+// Otherwise, load the next page of results.
+function loadNextPage() {
+    if (current_page + 1 == pages_links.length) {
+        chrome.runtime.sendMessage({
+            name: "done"
+        });
     } else {
-        console.log("Loading page number: " + (index + 1));
-        result_pages[index].click();
+        pages[current_page + 1].click();
     }
 }
 
-// Notify the extention once the program list has been loaded.
-var port = chrome.runtime.connect({
-    name: "program_list_ready"
-});
-
-// Alert me if there are more than 16 programs on any one search page.
-if ( program_links.length > 15 )
-    alert(program_links.length + " tabs are about to be opened..");
-// Send each program URL to the event page to be processed.
-for (var i = 0; i < program_links.length; i = i + 1) {
-    port.postMessage({
-        name: "create_tab",
-        url: program_links[i].href,
-        num_pages: result_pages.length
-    });
-}
-
-// Runs when a new page of search results is to be loaded.
-port.onMessage.addListener(function( nextIndex ) {
-    console.log("Message received. Next index: " + nextIndex);
-    loadResultsPage( nextIndex );
-});
+loadNextPage();

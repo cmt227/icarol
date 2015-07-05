@@ -2,8 +2,6 @@
 // update county info for resources.
 // Started 30, June, 2015 by Carsten Thue-Bludworth
 
-console.log("Executing start.js");
-
 // Lists of urban centers in Cortland county
 
 var cities = [
@@ -48,17 +46,14 @@ var ids = {
 
 //** Begin program **//
 
-function init_from_resources() {
-    radio_btn_select( $("#" + ids.resources_radio) );
-    radio_btn_select( $("#" + ids.specific_field) );
-    drop_down_select( $("#" + ids.field_dropdown), "PhysicalCity" );
-    var search_box = elem_is_unique( $("#" + ids.search_box) );
-    var search_btn = elem_is_unique( $("#" + ids.search_btn) );
+function initFromResources() {
+    radioBtnSelect( $("#" + ids.resources_radio) );
+    radioBtnSelect( $("#" + ids.specific_field) );
+    ddSelect( $("#" + ids.field_dropdown), "PhysicalCity" );
+    var search_box = elemIsUnique( $("#" + ids.search_box) );
+    var search_btn = elemIsUnique( $("#" + ids.search_btn) );
     search_box.value = "cortland";
     search_btn.click();
 }
 
-init_from_resources();
-
-// Next script loaded is loop.js -- starts communication with
-// event page.
+initFromResources();
