@@ -1,3 +1,7 @@
+// Script to navigate iCarol webapp and automatically
+// update county info for resources.
+// Started 30, June, 2015 by Carsten Thue-Bludworth
+
 // An array of program links for one search.
 var program_links = [];
 
@@ -35,6 +39,7 @@ chrome.runtime.onMessage.addListener(function(msg, sender, __) {
             break;
         case "done":
             process(program_links);
+            program_links = [];
             break;
         case "close_tab":
             chrome.tabs.remove(sender.tab.id);

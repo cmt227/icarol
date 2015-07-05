@@ -21,10 +21,6 @@
           "js": ["jquery-1.11.2.min.js", "underscore-min.js", "helpers.js"]
       },
       {
-          "matches": ["https://webapp.icarol.com/secure/Resources/ResourceMain.aspx"],
-          "js": ["start.js"]
-      },
-      {
           "matches": ["https://webapp.icarol.com/secure/Resources/ResourceMain.aspx?*"],
           "js": ["loop.js"]
       },
