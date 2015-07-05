@@ -24,7 +24,7 @@ chrome.runtime.sendMessage({
 // that we're done and it will start processing the links.
 // Otherwise, load the next page of results.
 function loadNextPage() {
-    if (current_page + 1 == pages_links.length) {
+    if (current_page + 1 == page_links.length) {
         chrome.runtime.sendMessage({
             name: "done"
         });
