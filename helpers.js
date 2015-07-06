@@ -3,19 +3,11 @@
 /* Returns the DOM element from an array if that
  * element is unique, otherwise throws an exception.
  */
-function elemIsUnique( element ) {
+function elemIsUnique(element) {
     if ( element.length = 1 ) {
         return element[0];
     } else {
         throw new Error("Non-unique element ID: " + element);
-    }
-}
-
-// Selects a radio button btn.
-function radioBtnSelect( btn ) {
-    var b = elemIsUnique( btn );
-    if ( !b.checked ) {
-        b.click();
     }
 }
 
@@ -33,7 +25,7 @@ function ddSelect(dd, field) {
  *   selected                        -> false
  * Precondition: dd is a defined DOM drop-down menu.
  */
-function ddIsComplete( dd ) {
+function ddIsComplete(dd) {
     if ( _.contains(dd.options, "Cortland") ) {
         if (dd.value == "Cortland")
             return true;
