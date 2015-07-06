@@ -20,9 +20,10 @@ function radioBtnSelect( btn ) {
 }
 
 // Selects menu entry 'field' from a drop down menu dd.
-function ddSelect( dd, field ) {
-    var d = elemIsUnique( dd );
-    d.value = field;
+// precondition: dd is a defined DOM drop-down.
+function ddSelect(dd, field) {
+    if (_.contains(dd.options, field))
+        d.value = field;
 }
 
 /* truth table:

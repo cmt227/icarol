@@ -4,6 +4,10 @@ var dd2 = elemIsUnique( $("#cphBody_ddPhysicalCounty") );
 
 var save_btn = elemIsUnique( $("#cphBody_btnSaveBottom") );
 
+var county = "Cortland";
+
+// Sends a request to the extension to close the tab
+// associated with this content script.
 function close_tab() {
     chrome.runtime.sendMessage({
         name: "close_tab"
@@ -20,10 +24,8 @@ if (dd1 != undefined && dd2 != undefined) {
         close_tab();
     // If they can be set to "Cortland", do so.
     } else {
-        if ( _.contains(dd1.options, "Cortland") )
-            dd1.value = "Cortland";
-        if ( _.contains(dd2.options, "Cortland") )
-            dd2.value = "Cortland";
+        ddSelect(dd1, county);
+        ddSelect(dd2, county);
         save_btn.click();
     }
 // Only the mailing county dd is present.
@@ -31,7 +33,7 @@ if (dd1 != undefined && dd2 != undefined) {
     if (ddIsComplete(dd1)) 
         close_tab();
     else {
-        dd1.value = "Cortland";
+        ddSelect(dd1, county);
         save_btn.click();
     }
 // Only the physical county dd is present.
@@ -39,12 +41,10 @@ if (dd1 != undefined && dd2 != undefined) {
     if ( ddIsComplete( dd2 ) ) 
         close_tab();
     else {
-        dd2.value = "Cortland";
+        ddSelect(dd2, county);
         save_btn.click();
     }
 // No county dd is present.
 } else {
     alert("Program missing county drop-downs.. :(");
 }
-
-close_tab();
